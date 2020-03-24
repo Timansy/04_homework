@@ -1,0 +1,64 @@
+#banner h1 {
+    background-color: tomato;
+    font-size: 100px;
+    padding-top: 10pt;
+    margin: 0;
+}
+
+label {
+    padding-top: 10px;
+}
+
+button {
+    padding-bottom: 20px;
+}
+
+hr {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: solid;
+    border-width: 5px;
+    border-color: tomato;
+}
+
+
+#seconds_per_question{
+    text-align: center;
+    float: right;
+}
+
+#bannerRow div {
+    background-color: tomato;
+}
+
+#right {
+    background-color: blanchedalmond;
+}
+
+#left {
+    background-color: lightskyblue
+}
+
+#footer {
+    background-color: gray;
+}
+
+h3 {
+    font-family: 'Pacifico', cursive;
+}
+
+h1 {
+    font-family: 'Modak', cursive;
+}
+
+#left button {
+    width: 100%;
+    background-color: blueviolet;
+}
+
+/* 
+font-family: 'Pacifico', cursive;
+font-family: 'Modak', cursive; */
