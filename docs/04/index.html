@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Title</title>
+    <title>The Marvelous Quiz Show</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -82,30 +82,85 @@
                 <br><br>
             </div>
             <div class="col-lg-8" id="right">
-                <h1>right</h1>
-            </div>
-            <div class="col-sm-12" id="footer">
-                <div class="container" id="footerContainer">
-                    <div class="col-lg-2 football">
-                        <label for="seconds_per_question">Seconds per question:</label>
-                        <input type="number" name="seconds_per_question" id="seconds_per_question" class="form-control" min="1" max="50" value="10">
+                <div class="row">
+                    <div class="col-md-10" id="carouselHolder">
+                        <div id="carouselId" class="carousel slide" data-ride="carousel" data-interval="0">
+                            <div class="carousel-inner" role="listbox">
+                                <div class="carousel-item highscores active">
+                                    <h3>HIGH SCORES</h3>
+                                </div>
+                                <div class="carousel-item gameboard">
+                                    <h3>GAME</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-primary btn-square btn-xl" id="crosswalk">
+                                    <i class="fas fa-walking fa-2x"></i>
+                                    <i class="fas fa-hand-paper"></i>
+                                </button>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-circle btn-xl" id="red">10
+                                </button>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-warning btn-circle btn-xl" id="yellow">10
+                                </button>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-success btn-circle btn-xl" id="green">10
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row" id="footer">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-8">
+                <form class="form-inline" id="footform">
+                    <label for="seconds_per_question" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Seconds per Q
+                        (1-10)&nbsp;&nbsp;</label>
+                    <div>
+                        <input type="number" name="seconds_per_question" id="seconds_per_question" class="form-control"
+                            min="1" max="10" value="10">
+                    </div>
+                    <label for="penalty_seconds" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Penalty Seconds
+                        (0-5)&nbsp;&nbsp;</label>
+                    <div>
+                        <input type="number" name="penalty_seconds" id="penalty_seconds" class="form-control" min="0"
+                            max="5" value="3">
+                    </div>
+                    <label for="bonus_seconds" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Bonus Seconds
+                        (0-5)&nbsp;</label>
+                    <div>
+                        <input width="30px" type="number" name="bonus_seconds" id="bonus_seconds" class="form-control"
+                            min="0" max="5" value="0">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
