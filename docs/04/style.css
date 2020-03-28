@@ -64,15 +64,8 @@ h1 {
     background-color: blueviolet;
 }
 
-#carouselHolder div {
-    margin-top: 3%;
-    margin-bottom: 3%;
-    /* background-color: black; */
-    height:550px;
-}
-
 #carouselId {
-    background-color: black;
+    background-color: blanchedalmond;
     height:100%;
 }
 
@@ -126,6 +119,16 @@ button#green{
     border:green;
     border-style: dotted;
     pointer-events:none;
+}
+
+.card {
+    margin-top: 3%;
+    width: 100%;
+    height: 550px;
+}
+
+.card-text{
+    text-align: right;
 }
 
 /* 
