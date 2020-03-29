@@ -121,6 +121,14 @@ button#green{
     pointer-events:none;
 }
 
+button#scoreField{
+    pointer-events:none;
+}
+
+button.disabled{
+    pointer-events:none;
+}
+
 .card {
     margin-top: 3%;
     width: 100%;
@@ -130,6 +138,20 @@ button#green{
 .card-text{
     text-align: right;
 }
+
+#hsEntry{
+    color:#353839;
+}
+
+#leftcontent{
+    float: left;
+}
+
+#rightcontent{
+    float: right;
+}
+
+
 
 /* 
 font-family: 'Pacifico', cursive;
