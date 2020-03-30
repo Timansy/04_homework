@@ -83,29 +83,8 @@
                                 <div class="carousel-item game">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <div class="card text-white bg-dark mb-3">
-                                                <div class="card-header">Question # of TOTAL | Difficulty | Category
-                                                </div>
-                                                <div class="card-body">
-                                                    <h5 class="card-title">Question</h5>
-                                                    <div class="list-group">
-                                                        <button type="button"
-                                                            class="list-group-item list-group-item-action btn"
-                                                            id="a1">1</button>
-                                                        <button type="button"
-                                                            class="list-group-item list-group-item-action btn"
-                                                            id="a2">2</button>
-                                                        <button type="button"
-                                                            class="list-group-item list-group-item-action btn"
-                                                            id="a3">3</button>
-                                                        <button type="button"
-                                                            class="list-group-item list-group-item-action btn"
-                                                            id="a4">4</button>
-                                                    </div>
-                                                    <p class="card-text"><br><button type="button"
-                                                            class="btn btn-primary btn-xl disabled"
-                                                            id="submit">Submit!</button></p>
-                                                </div>
+                                            <div class="card text-white bg-dark mb-3 gameboard">
+
                                             </div>
                                         </div>
                                     </div>
@@ -122,26 +101,23 @@
                                                     <form class="form-inline">
                                                         <div class="form-group">
                                                             <label for="">First name:&nbsp;&nbsp;&nbsp;</label>
-                                                            <input type="text" name="whatsName" id=""
+                                                            <input type="text" name="whatsName" id="whatsName"
                                                                 class="form-control" placeholder=""
                                                                 aria-describedby="helpId">
                                                             &nbsp;&nbsp;&nbsp;<button type="button"
                                                                 class="btn btn-secondary btn-xl"
                                                                 id="scoreField">Score</button>
                                                             &nbsp;&nbsp;&nbsp;<button type="button"
-                                                                class="btn btn-primary btn-xl">Submit</button>
+                                                                class="btn btn-primary btn-xl scoreSubmit">Submit</button>
                                                         </div>
                                                     </form>
                                                     <hr>
                                                 </div>
-                                                
+
                                                 <h5 class="card-title2">Top Scores</h5>
                                                 <div class="card2">
                                                     <!-- <img class="card-img-top" data-src="holder.js/100x180/?text=Image cap" alt="Card image cap"> -->
-                                                    <ul class="list-group list-group-flush">
-                                                        <li class="list-group-item" id="hsEntry"><span
-                                                                id=leftcontent>Bob</span><span
-                                                                id=rightcontent>100</span></li>
+                                                    <ul class="list-group list-group-flush hstable">
                                                     </ul>
                                                 </div>
                                             </div>
@@ -176,34 +152,35 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row" id="footer">
-        <div class="col-sm-4">
+
+        <div class="row" id="footer">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-8">
+                <form class="form-inline" id="footform">
+                    <label for="seconds_per_question" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Seconds per Q
+                        (1-20)&nbsp;&nbsp;</label>
+                    <div>
+                        <input type="number" name="seconds_per_question" id="seconds_per_question" class="form-control"
+                            min="1" max="20" value="10">
+                    </div>
+                    <label for="penalty_seconds" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Penalty Seconds
+                        (0-5)&nbsp;&nbsp;</label>
+                    <div>
+                        <input type="number" name="penalty_seconds" id="penalty_seconds" class="form-control" min="0"
+                            max="5" value="3">
+                    </div>
+                    <label for="bonus_seconds" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Bonus Seconds
+                        (0-5)&nbsp;</label>
+                    <div>
+                        <input width="30px" type="number" name="bonus_seconds" id="bonus_seconds" class="form-control"
+                            min="0" max="5" value="0">
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="col-sm-8">
-            <form class="form-inline" id="footform">
-                <label for="seconds_per_question" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Seconds per Q
-                    (1-10)&nbsp;&nbsp;</label>
-                <div>
-                    <input type="number" name="seconds_per_question" id="seconds_per_question" class="form-control"
-                        min="1" max="10" value="10">
-                </div>
-                <label for="penalty_seconds" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Penalty Seconds
-                    (0-5)&nbsp;&nbsp;</label>
-                <div>
-                    <input type="number" name="penalty_seconds" id="penalty_seconds" class="form-control" min="0"
-                        max="5" value="3">
-                </div>
-                <label for="bonus_seconds" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Bonus Seconds
-                    (0-5)&nbsp;</label>
-                <div>
-                    <input width="30px" type="number" name="bonus_seconds" id="bonus_seconds" class="form-control"
-                        min="0" max="5" value="0">
-                </div>
-            </form>
-        </div>
     </div>
-    </div>
+    
 
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -1,21 +1,34 @@
 let quizQuestions = [];
+var gamestatus = 0; //0 = ready, 1 = running, 2 = ended;
+let highscores = [];
+
+function SortByscore(a, b) {
+    var aName = a.score;
+    var bName = b.score;
+    return ((aName > bName) ? -1 : ((aName < bName) ? 1 : 0));
+}
+
+highscores = highscores.sort(SortByscore);
+
 var remainingQuestions = 10;
 var startingQuestionCount = remainingQuestions;
 var currentQuestionNo = 1;
 var questionCorrect = 0;
 var questionIncorrect = 0;
-var gamestatus = 1; //0 = ready, 1 = running, 2 = ended;
 var secondsPerQuestion = 10;
-var penaltySeconds = 3;
+var penaltySeconds = 0;
 var bonusSeconds = 0;
 var secondsRemaining = remainingQuestions * secondsPerQuestion;
 var mydata;
 var selectCategory = "any";
 var selectQuantity = "10";
 var selectDifficulty = "any";
+var questionComplete = true;
+var score = 0;
+var playerName = "";
 
 { //Outside Functions
-    function question(category, type, difficulty, question, correct_answer, incorrect_answers1, incorrect_answers2, incorrect_answers3) {
+    function question(category, type, difficulty, question, correct_answer, incorrect_answers1, incorrect_answers2, incorrect_answers) {
         this.category = category;
         this.type = type;
         this.difficulty = difficulty;
@@ -39,7 +52,7 @@ var selectDifficulty = "any";
             dataType: "json",
             async: false,
             success: function (questions) {
-                console.log(questions.results[0]);
+                //console.log(questions.results[0]);
                 $.each(questions.results, function (i, question) {
                     addQuestion(questions.results[i]);
                 });
@@ -53,194 +66,307 @@ var selectDifficulty = "any";
 $(document).ready(function () {
 
     hsForm = $("#hsform");
-    {//inside functions
+    //inside functions
+    function setScore() {
+        score = (startingQuestionCount - questionIncorrect) * 100 + secondsRemaining;
+        $("#scoreField").text(score);
+    }
 
-        function setTrafficLight() {
-            $("#red").text(questionIncorrect);
-            $("#yellow").text(remainingQuestions);
-            $("#green").text(questionCorrect);
-        }
-
-        function setCrosswalk() {
-            if (gamestatus === 0) {
-                $("#crosswalk").removeClass("fas fa-hand-paper").addClass("fas fa-walking fa-2x");
-            } else if (gamestatus === 2)
-                $("#crosswalk").removeClass("fas fa-walking fa-2x").addClass("fas fa-hand-paper");
-            else {
-                $("#crosswalk").removeClass().html("<h4>" + secondsRemaining + "</h4>");
-            }
-        }
-
-        function toTitleCase(str) {//capitalizes words
-            return str.replace(
-                /\w\S*/g,
-                function (txt) {
-                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                }
-            );
-        }
-
-        function setfooterValues() {
-            $("#seconds_per_question").val(secondsPerQuestion);
-            $("#penalty_seconds").val(penaltySeconds);
-            $("#bonus_seconds").val(bonusSeconds);
-        }
-
-        {//capture changes in footer section
-            $("#seconds_per_question").on("change", function () {
-                secondsPerQuestion = parseInt($("#seconds_per_question").val());
-            });
-            $("#penalty_seconds").on("change", function () {
-                penaltySeconds = parseInt($("#penalty_seconds").val());
-            });
-            $("#bonus_seconds").on("change", function () {
-                bonusSeconds = parseInt($("#bonus_seconds").val());
-            });
-        }
-
-        {//capture changes in custom quiz 
-            $("#trivia_category").on("change", function () {
-                selectCategory = $("#trivia_category").val();
-            });
-            $("#trivia_difficulty").on("change", function () {
-                selectDifficulty = $("#trivia_difficulty").val();
-            });
-            $("#trivia_amount").on("change", function () {
-                selectQuantity = $("#trivia_amount").val();
-            });
-        }
-
-        function buildRemoteURL() {
-            var u = `https://opentdb.com/api.php?amount=${selectQuantity}&type=multiple`;
-            if (selectCategory !== "any") {
-                u = u + `&category=${selectCategory}`;
-            }
-            if (selectDifficulty !== "any") {
-                u = u + `&difficulty=${selectDifficulty}`;
-            }
-            console.log(u);
-            return u;
-        }
-
-        function textCleaner(text) {
-            return text
-                .replace(/&quot;/g, '\"')
-                .replace(/&#039;/g, '\'')
-                .replace(/&amp;/g, '\&')
-                .replace(/&rdquo;/g, '\"')
-                .replace(/&ldquo;/g, '\"')
-                ;
+    function listScores() {
+        $(".hstable").empty();
+        for (var i = 0; i < highscores.length; i++) {
+            $(".hstable").append(`<li class="list-group-item" id="hsEntry"><span id=leftcontent>${highscores[i].name}</span><span id=rightcontent>${highscores[i].score}</span></li>`);
         }
     }
+
+    function setTrafficLight() {
+        $("#red").text(questionIncorrect);
+        $("#yellow").text(remainingQuestions);
+        $("#green").text(questionCorrect);
+    }
+
+    function setCrosswalk() {
+        if (gamestatus === 0) {
+            $("#crosswalk").removeClass("fas fa-hand-paper").addClass("fas fa-walking fa-2x");
+        } else if (gamestatus === 2)
+            $("#crosswalk").removeClass("fas fa-walking fa-2x").addClass("fas fa-hand-paper");
+        else {
+            $("#crosswalk").removeClass().html("<h4>" + secondsRemaining + "</h4>");
+        }
+    }
+
+    function toTitleCase(str) {//capitalizes words
+        return str.replace(
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
+    function setfooterValues() {
+        $("#seconds_per_question").val(secondsPerQuestion);
+        $("#penalty_seconds").val(penaltySeconds);
+        $("#bonus_seconds").val(bonusSeconds);
+    }
+
+    {//capture changes in footer section
+        $("#seconds_per_question").on("change", function () {
+            secondsPerQuestion = parseInt($("#seconds_per_question").val());
+        });
+        $("#penalty_seconds").on("change", function () {
+            penaltySeconds = parseInt($("#penalty_seconds").val());
+        });
+        $("#bonus_seconds").on("change", function () {
+            bonusSeconds = parseInt($("#bonus_seconds").val());
+        });
+    }
+
+    function setqty() {
+        selectQuantity = $("#trivia_amount").val();
+        startingQuestionCount = parseInt($("#trivia_amount").val());
+        remainingQuestions = startingQuestionCount;
+        if (gamestatus != 2) {
+            remainingQuestions = startingQuestionCount;
+            setTrafficLight();
+        }
+    }
+
+    {//capture changes in custom quiz 
+        $("#trivia_category").on("change", function () {
+            selectCategory = $("#trivia_category").val();
+        });
+        $("#trivia_difficulty").on("change", function () {
+            selectDifficulty = $("#trivia_difficulty").val();
+        });
+        $("#trivia_amount").on("change", function () {
+            setqty();
+        });
+    }
+
+    function buildRemoteURL() {
+        var u = `https://opentdb.com/api.php?amount=${selectQuantity}&type=multiple`;
+        if (selectCategory !== "any") {
+            u = u + `&category=${selectCategory}`;
+        }
+        if (selectDifficulty !== "any") {
+            u = u + `&difficulty=${selectDifficulty}`;
+        }
+        console.log(u);
+        return u;
+    }
+
+    function textCleaner(text) {
+        return text
+            .replace(/&quot;/g, '\"')
+            .replace(/&#039;/g, '\'')
+            .replace(/&amp;/g, '\&')
+            .replace(/&rdquo;/g, '\"')
+            .replace(/&ldquo;/g, '\"')
+            ;
+    }
+
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds) {
+                break;
+            }
+        }
+    }
+
+
+
     //QUESTION FUNCTIONS
     function postQuestion(i) {
         //check to see i is at the end
-        if (i < startingQuestionCount) {
-            $('.list-group').removeClass("active btn-success")
-            var difficulty = toTitleCase(quizQuestions[i].difficulty);
-            var category = quizQuestions[i].category;
-            var correct = quizQuestions[i].correct_answer;
-            $(".card-header").text(`Question ${currentQuestionNo} of ${startingQuestionCount} | ${difficulty} | ${category}`);
-            $(".card-title").text(textCleaner(quizQuestions[i].question));
-            var solutionEntry = Math.ceil(Math.random() * 4);
-            if (solutionEntry === 1) {
-                $("#a1").text(textCleaner(correct));
-                $("#a2").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
-                $("#a3").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
-                $("#a4").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
-            } else if (solutionEntry === 2) {
-                $("#a2").text(textCleaner(correct));
-                $("#a1").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
-                $("#a3").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
-                $("#a4").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
-            } else if (solutionEntry === 3) {
-                $("#a3").text(textCleaner(correct));
-                $("#a2").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
-                $("#a1").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
-                $("#a4").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
-            } if (solutionEntry === 4) {
-                $("#a4").text(textCleaner(correct));
-                $("#a2").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
-                $("#a3").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
-                $("#a1").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
-            }
+        questionComplete = false;
+        //questions set-up - START
+        $(".gameboard").empty();
+        $(".gameboard").html("<div class=\"card-header\">Question # of TOTAL | Difficulty | Category</div><div class=\"card-body\"><h5 class=\"card-title\">Question</h5>          <div class=\"list-group\"><button type=\"button\" class=\"list-group-item list-group-item-action btn\"id = \"a1\" > 1</button><button type=\"button\" class=\"list-group-item list-group-item-action btn \"id=\"a2\">2</button><button type=\"button\"class=\"list-group-item list-group-item-action btn \"id=\"a3\">3</button> <button type=\"button\"class=\"list-group-item list-group-item-action btn\" id=\"a4\">4</button></div><p class=\"card-text\"><br><button type=\"button\" class=\"btn btn-primary btn-xl disabled\" id=\"submit\">Submit!</button></p></div>");
+        var mydifficulty = toTitleCase(quizQuestions[i].difficulty);
+        var category = quizQuestions[i].category;
+        var correct = quizQuestions[i].correct_answer;
+        $(".card-header").text(`Question ${currentQuestionNo} of ${startingQuestionCount} | ${mydifficulty} | ${category}`);
+        $(".card-title").text(textCleaner(quizQuestions[i].question));
+        var solutionEntry = Math.ceil(Math.random() * 4);
+        if (solutionEntry === 1) {
+            $("#a1").text(textCleaner(correct));
+            $("#a2").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
+            $("#a3").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
+            $("#a4").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
+        } else if (solutionEntry === 2) {
+            $("#a2").text(textCleaner(correct));
+            $("#a1").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
+            $("#a3").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
+            $("#a4").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
+        } else if (solutionEntry === 3) {
+            $("#a3").text(textCleaner(correct));
+            $("#a2").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
+            $("#a1").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
+            $("#a4").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
+        } if (solutionEntry === 4) {
+            $("#a4").text(textCleaner(correct));
+            $("#a2").text(textCleaner(quizQuestions[i].incorrect_answers[0]));
+            $("#a3").text(textCleaner(quizQuestions[i].incorrect_answers[1]));
+            $("#a1").text(textCleaner(quizQuestions[i].incorrect_answers[2]));
+        }
 
-            { //sets the active button
-                $('.list-group').on('click', '.btn', function () {
-                    $(this).addClass('active').siblings().removeClass('active');
-                    $("#submit").removeClass("disabled");
-                });
-            }
-            function correctAnswer() {
-                questionCorrect++;
-                remainingQuestions--;
-                secondsRemaining = secondsRemaining + bonusSeconds;
-            }
-            function incorrectAnswer() {
-                questionIncorrect++;
-                remainingQuestions--;
-                secondsRemaining = secondsRemaining - penaltySeconds;
+        { //sets the active button
+            $('.list-group').on('click', '.btn', function () {
+                $(this).addClass('active').siblings().removeClass('active');
+                $("#submit").removeClass("disabled");
+            });
+        }
+        function correctAnswer() {
+            questionCorrect++;
+            remainingQuestions--;
+            secondsRemaining = secondsRemaining + bonusSeconds;
+            setCrosswalk();
+            setTrafficLight();
+        }
+        function incorrectAnswer() {
+            questionIncorrect++;
+            remainingQuestions--;
+            secondsRemaining = secondsRemaining - penaltySeconds;
+            setCrosswalk();
+            setTrafficLight();
+        }
 
-            }
+        { //sets the active button
+            $('#submit').on('click', function () {
 
-            { //sets the active button
-                $('#submit').on('click', function () {
-                    if (solutionEntry === 1) {
-                        if ($("#a1").hasClass("active")) {
-                            correctAnswer();
-                            $("#a1").addClass("btn-success");
-                        } else {
-                            incorrectAnswer();
-                            $("#a1").addClass("btn-success active");
-                        }
-                    } else if (solutionEntry === 2) {
-                        if ($("#a2").hasClass("active")) {
-                            correctAnswer();
-                            $("#a2").addClass("btn-success");
-                        } else {
-                            incorrectAnswer();
-                            $("#a2").addClass("btn-success active");
-                        }
-                    } else if (solutionEntry === 3) {
-                        if ($("#a3").hasClass("active")) {
-                            correctAnswer();
-                            $("#a3").addClass("btn-success");
-                        } else {
-                            incorrectAnswer();
-                            $("#a3").addClass("btn-success active");
-                        }
-                    } else if (solutionEntry === 4) {
-                        if ($("#a4").hasClass("active")) {
-                            correctAnswer();
-                            $("#a4").addClass("btn-success");
-                        } else {
-                            incorrectAnswer();
-                            $("#a4").addClass("btn-success active");
-                        }
-                    } 
-                    $(this).addClass("disabled");
-                    setTimeout(postQuestion(i+1),3000);
-                });
-            }
-        } else {
-            // endGame();
+                if (solutionEntry === 1) {
+                    if ($("#a1").hasClass("active")) {
+                        correctAnswer();
+                        $("#a1").addClass("btn-success");
+                    } else {
+                        incorrectAnswer();
+                        $("#a1").addClass("btn-success active");
+                    }
+                } else if (solutionEntry === 2) {
+                    if ($("#a2").hasClass("active")) {
+                        correctAnswer();
+                        $("#a2").addClass("btn-success");
+                    } else {
+                        incorrectAnswer();
+                        $("#a2").addClass("btn-success active");
+                    }
+                } else if (solutionEntry === 3) {
+                    if ($("#a3").hasClass("active")) {
+                        correctAnswer();
+                        $("#a3").addClass("btn-success");
+                    } else {
+                        incorrectAnswer();
+                        $("#a3").addClass("btn-success active");
+                    }
+                } else if (solutionEntry === 4) {
+                    if ($("#a4").hasClass("active")) {
+                        correctAnswer();
+                        $("#a4").addClass("btn-success");
+                    } else {
+                        incorrectAnswer();
+                        $("#a4").addClass("btn-success active");
+                    }
+                }
+                $(this).addClass("disabled");
+                questionComplete = true;
+                currentQuestionNo++;
+            });
         }
     }
 
-
-
     $("#customQuiz").on("click", function () {
-        retrieveQuestions(buildRemoteURL());
-        postQuestion(0);
-        $(".game").addClass("active");
-        $(".highscores").removeClass("active");
+        if (gamestatus != 1) {
+            reset();
+            gameController();
+        }
     });
 
     //starting
     hsForm.hide();
-    //retrieveQuestions(buildRemoteURL());
     setfooterValues();
     setCrosswalk();
     setTrafficLight();
-    postQuestion(0);
+    listScores();
+
+    function reset() {
+        
+        startingQuestionCount = remainingQuestions;
+        currentQuestionNo = 1;
+        questionCorrect = 0;
+        questionIncorrect = 0;
+        secondsRemaining = remainingQuestions * secondsPerQuestion;
+        questionComplete = true;
+        score = 0;
+        playerName = "";
+        setqty();
+    }
+
+
+
+    function gameController() {
+        //call questions
+        gamestatus = 1;
+        retrieveQuestions(buildRemoteURL());
+        //$(".gameboard").empty();
+        var thisGameQuestionCount = startingQuestionCount;
+        var thisGameSecondsPerQuestion = secondsPerQuestion;
+        secondsRemaining = thisGameQuestionCount * thisGameSecondsPerQuestion;
+        //set up interval timer to
+        var nIntervId;
+        nIntervId = setInterval(function () {
+            if (secondsRemaining < 1) {
+                gamestatus = 2;
+                $(".game").removeClass("active");
+                $(".highscores").addClass("active");
+                $("#hsform").show();
+                questionIncorrect++;
+                setScore();
+                console.log("got here");
+                clearInterval(nIntervId);
+                return String("timed_out");
+            }
+            if (currentQuestionNo <= thisGameQuestionCount) {
+                if (questionComplete === true) {
+                    postQuestion(currentQuestionNo - 1);
+
+                    $(".game").addClass("active");
+                    $(".highscores").removeClass("active");
+                } else {
+                    setCrosswalk();
+                    setTrafficLight();
+                    console.log("got here");
+                }
+            } else {
+                gamestatus = 2;
+                $(".game").removeClass("active");
+                $(".highscores").addClass("active");
+                $("#hsform").show();
+                setScore();
+                console.log("got here");
+                clearInterval(nIntervId);
+                return String("finished_quiz");
+
+
+            }
+            secondsRemaining--;
+            setCrosswalk();
+            setTrafficLight();
+        }, 1000);
+
+        $(".scoreSubmit").click(function (event) {
+            event.stopPropagation();
+            playerName = $("#whatsName").val();
+            highscores.push({ name: playerName, score: score });
+            highscores = highscores.sort(SortByscore);
+            listScores();
+            $("#hsform").hide();
+            clearInterval(nIntervId);
+            gamestatus = 0;
+            reset();
+            $(".scoreSubmit").unbind(eventType);
+        });
+    }
+
 });
