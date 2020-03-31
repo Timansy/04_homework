@@ -26,6 +26,7 @@ var selectDifficulty = "any";
 var questionComplete = true;
 var score = 0;
 var playerName = "";
+var computerButtonClicked = false;
 
 { //Outside Functions
     function question(category, type, difficulty, question, correct_answer, incorrect_answers1, incorrect_answers2, incorrect_answers) {
@@ -146,9 +147,14 @@ $(document).ready(function () {
 
     function buildRemoteURL() {
         var u = `https://opentdb.com/api.php?amount=${selectQuantity}&type=multiple`;
-        if (selectCategory !== "any") {
+
+
+        if (computerButtonClicked) {
+            u = u + `&category=18`;
+        } else if(selectCategory !== "any") {
             u = u + `&category=${selectCategory}`;
         }
+
         if (selectDifficulty !== "any") {
             u = u + `&difficulty=${selectDifficulty}`;
         }
@@ -276,12 +282,22 @@ $(document).ready(function () {
         }
     }
 
+    $("#computerQuiz").on("click", function () {
+        if (gamestatus != 1) {
+            reset();
+            computerButtonClicked = true;
+            gameController();
+        }
+    });
+
     $("#customQuiz").on("click", function () {
         if (gamestatus != 1) {
             reset();
             gameController();
         }
     });
+
+
 
     //starting
     hsForm.hide();
@@ -291,7 +307,7 @@ $(document).ready(function () {
     listScores();
 
     function reset() {
-        
+
         startingQuestionCount = remainingQuestions;
         currentQuestionNo = 1;
         questionCorrect = 0;
@@ -301,6 +317,7 @@ $(document).ready(function () {
         score = 0;
         playerName = "";
         setqty();
+        computerButtonClicked = false;
     }
 
 
@@ -366,6 +383,20 @@ $(document).ready(function () {
             gamestatus = 0;
             reset();
             $(".scoreSubmit").unbind(eventType);
+        });
+
+        $("#whatsName").on("blur", function () {
+            event.stopPropagation();
+            playerName = $("#whatsName").val();
+            highscores.push({ name: playerName, score: score });
+            highscores = highscores.sort(SortByscore);
+            listScores();
+            $("#hsform").hide();
+            clearInterval(nIntervId);
+            gamestatus = 0;
+            reset();
+            $(".scoreSubmit").unbind(eventType);
+
         });
     }
 
