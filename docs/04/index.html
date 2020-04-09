@@ -25,9 +25,10 @@
             </div>
         </div>
         <div class="row">
+            <!-- Game Selection Area -->
             <div class="col-lg-4" id="left">
                 <br>
-                <h3>Standard JavaScript quiz...</h3>
+                <h3>Standard computer quiz...</h3>
                 <button type="button" class="btn btn-lg btn-primary" id = "computerQuiz">Standard Computer Quiz</button>
 
                 <hr>
@@ -70,16 +71,18 @@
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>
                 </select>
-
                 <br>
                 <button type="button" class="btn btn-lg btn-primary" id="customQuiz">Custom Quiz</button>
                 <br><br>
             </div>
+            <!-- Gameboard and Traffic Light Display -->
             <div class="col-lg-8" id="right">
                 <div class="row">
+                    <!-- Gameboard -->
                     <div class="col-sm-10" id="carouselHolder">
                         <div id="carouselId" class="carousel slide" data-ride="carousel" data-interval="0">
                             <div class="carousel-inner" role="listbox">
+                                <!-- This is the gameboard area that gets populated by the game controller. -->
                                 <div class="carousel-item game">
                                     <div class="row">
                                         <div class="col-lg-12">
@@ -89,6 +92,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- highscores area -->
                                 <div class="carousel-item highscores active">
                                     <div class="row">
                                         <div class="col-lg-12"></div>
@@ -127,6 +131,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Traffic Light -->
                     <div class="col-sm-2">
                         <div class="row">
                             <div class="col-lg-12">
@@ -154,8 +159,10 @@
         </div>
 
         <div class="row" id="footer">
+            <!-- spacer -->
             <div class="col-sm-4">
             </div>
+            <!-- Footer Options -->
             <div class="col-sm-8">
                 <form class="form-inline" id="footform">
                     <label for="seconds_per_question" class="col-form-label">&nbsp;&nbsp;&nbsp;&nbsp;Seconds per Q

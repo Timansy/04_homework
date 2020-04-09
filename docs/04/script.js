@@ -1,15 +1,20 @@
-let quizQuestions = [];
-var gamestatus = 0; //0 = ready, 1 = running, 2 = ended;
-let highscores = [];
+//Initial variables
 
+let quizQuestions = [];//populated at game time
+var gamestatus = 0; //0 = ready, 1 = running, 2 = ended;
+
+//High scores area
+let highscores = []; //not stored outside of local session
+//Nice little addition from Stack Overflow
+//could use it to sort over any part of the object
 function SortByscore(a, b) {
     var aName = a.score;
     var bName = b.score;
     return ((aName > bName) ? -1 : ((aName < bName) ? 1 : 0));
 }
-
 highscores = highscores.sort(SortByscore);
 
+//Variables, though some are not really used or thought out.
 var remainingQuestions = 10;
 var startingQuestionCount = remainingQuestions;
 var currentQuestionNo = 1;
