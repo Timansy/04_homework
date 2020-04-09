@@ -150,9 +150,9 @@ $(document).ready(function () {
         });
     }
 
+    //sets the questions to either the form or a default computer category.
     function buildRemoteURL() {
         var u = `https://opentdb.com/api.php?amount=${selectQuantity}&type=multiple`;
-
 
         if (computerButtonClicked) {
             u = u + `&category=18`;
@@ -167,6 +167,8 @@ $(document).ready(function () {
         return u;
     }
 
+    //a nifty little function that replaces ASCII code with their correspondind characters
+    //there are still
     function textCleaner(text) {
         return text
             .replace(/&quot;/g, '\"')
@@ -177,6 +179,8 @@ $(document).ready(function () {
             ;
     }
 
+    //never ended up using this, but I left it in here nonetheless
+    //it may eventually be good to make the click>view answer timing which is not consistent
     function sleep(milliseconds) {
         var start = new Date().getTime();
         for (var i = 0; i < 1e7; i++) {
@@ -229,6 +233,7 @@ $(document).ready(function () {
                 $("#submit").removeClass("disabled");
             });
         }
+
         function correctAnswer() {
             questionCorrect++;
             remainingQuestions--;
@@ -244,7 +249,8 @@ $(document).ready(function () {
             setTrafficLight();
         }
 
-        { //sets the active button
+        {   //sets the active button, compares correct answer
+            //colors correct answer, calls correct/incorrect anser functions
             $('#submit').on('click', function () {
 
                 if (solutionEntry === 1) {
@@ -287,6 +293,7 @@ $(document).ready(function () {
         }
     }
 
+    //Computer Based Quiz
     $("#computerQuiz").on("click", function () {
         if (gamestatus != 1) {
             reset();
@@ -295,6 +302,7 @@ $(document).ready(function () {
         }
     });
 
+    //User Generated Quiz
     $("#customQuiz").on("click", function () {
         if (gamestatus != 1) {
             reset();
@@ -303,14 +311,14 @@ $(document).ready(function () {
     });
 
 
-
-    //starting
+    //PAGE START
     hsForm.hide();
     setfooterValues();
     setCrosswalk();
     setTrafficLight();
     listScores();
 
+    //Called after quizes to set up for next game
     function reset() {
 
         startingQuestionCount = remainingQuestions;
@@ -326,10 +334,10 @@ $(document).ready(function () {
     }
 
 
-
+    //Called on clicks
     function gameController() {
         //call questions
-        gamestatus = 1;
+        gamestatus = 1; //game is running
         retrieveQuestions(buildRemoteURL());
         //$(".gameboard").empty();
         var thisGameQuestionCount = startingQuestionCount;
@@ -369,13 +377,13 @@ $(document).ready(function () {
                 console.log("got here");
                 clearInterval(nIntervId);
                 return String("finished_quiz");
-
-
             }
             secondsRemaining--;
             setCrosswalk();
             setTrafficLight();
         }, 1000);
+
+        //after the game end, the HS form triggers the reset
 
         $(".scoreSubmit").click(function (event) {
             event.stopPropagation();
@@ -390,6 +398,7 @@ $(document).ready(function () {
             $(".scoreSubmit").unbind(eventType);
         });
 
+        //after the game end, the HS form triggers the reset
         $("#whatsName").on("blur", function () {
             event.stopPropagation();
             playerName = $("#whatsName").val();
@@ -400,8 +409,7 @@ $(document).ready(function () {
             clearInterval(nIntervId);
             gamestatus = 0;
             reset();
-            $(".scoreSubmit").unbind(eventType);
-
+            $("#whatsName").unbind(eventType);
         });
     }
 

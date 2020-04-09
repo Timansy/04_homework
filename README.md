@@ -31,5 +31,9 @@ I showed this one off to the family.
 ### To Do
 
 * Store Highscores
+    * Set maximum entries and limit based upon current score
 * Set to work on phone
 * Clean up code! !!!
+    * add more filters for the textCleaner function
+    * click > view answer timing is off
+
